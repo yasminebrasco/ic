@@ -21,10 +21,10 @@ plot(density(n.dados[,1]), ylim=c(0,0.14))
 apply(n.dados, 2, graf)
 
 ##Benilton
-fit=apply(x, 2, density)
+fit=apply(n.dados, 2, density)
 matx=sapply(fit, '[[', 'x')
 maty=sapply(fit, '[[', 'y')
-matploy(matx,maty)
+matploy(matx,maty, type='l', lty=1)
 
 
 install.packages("sm")

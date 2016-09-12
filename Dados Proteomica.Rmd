@@ -32,49 +32,19 @@ Podemos plotar um histograma suavizado com a densidade dos dados
 plot(density(n.dados), add=TRUE)
 ```
 
-E podemos plotar para cada indivíduo:
+E podemos plotar a densidade para cada indivíduo:
 ```{r dens.ind, results='hide', fig.align='center'}
-graf=function(x) lines(density(x), col=sample(1:10000, 1))
-plot(density(n.dados[,1]), ylim=c(0,0.14))
-apply(n.dados, 2, graf)
+fit=apply(n.dados, 2, density)
+matx=sapply(fit, '[[', 'x')
+maty=sapply(fit, '[[', 'y')
+matplot(matx,maty, type='l', lty=1)
 ```
 
 Podemos estudar as correlações entre cada réplica de cada indivíduo. Para mostrar tais correlações podemos fazer alguns gráficos.
 
-```{r, fig.cap="Gráfico de esferas", fig.align='center'}
+```{r, fig.cap="Gráfico de correlação entre as réplicas de cada indivíduo", fig.align='center'}
 data=as.data.frame(n.dados, row.names =tabela1[[1]], col.names=tabela[2,])
-x=cor(data[,1:10])
-library(corrplot)
-corrplot(x, type="upper", order="hclust", tl.col="black", tl.srt=45)
-```
-
-```{r, fig.cap="Gráfico de elipses", fig.align='center'}
 corrplot(x, method="ellipse")
-```
-
-```{r, fig.cap="Gráfico de niveis", fig.align='center'}
-require(lattice)
-levelplot(x)
-```
-
-```{r, fig.cap="Ggplot2", fig.align='center'}
-library(ggplot2)
-library(reshape)
-x.m = melt(x)
-ggplot(x.m, aes(X1, X2, fill = value)) + geom_tile() + 
-  scale_fill_gradient(low = "blue",  high = "yellow")
-```
-
-Podemos calcular também as correlações par a par e graficá-las.
-
-```{r cor.pares, fig.cap="Gráfico de dispersão", fig.align='center'}
-data=data[,-75]
-x=rep(0,length(data)/2)
-for (i in 1:(length(data)/2)) {
-  x[i]=cor(data[,2*i-1],data[,2*i])
-}
-plot(x)
-hist(x)
 ```
 
 Para garantir que as correlações sejam calculadas para cada individuo entre suas réplicas corretamente, precisamos no certificar de que existam para cada um duas réplicas.
@@ -89,3 +59,13 @@ table(amostras, replicas)
 
 Como podemos ver, cada um dos indivíduos, seja ele controle ou afetado, temos duas réplicas, com exceção do paciente afetado 73B, portanto não faremos essa análise para ele.
 
+Então podemos calcular as correlações par a par e graficá-las.
+
+```{r cor.pares, fig.cap="Gráfico de dispersão", fig.align='center'}
+data=data[,-75]
+x=rep(0,length(data)/2)
+for (i in 1:(length(data)/2)) {
+  x[i]=cor(data[,2*i-1],data[,2*i])
+}
+hist(x)
+```
