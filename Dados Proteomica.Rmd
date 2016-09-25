@@ -7,11 +7,11 @@ output: html_document
 
 #Objetivo
 
-Queremos saber quais são as proteínas que têm abundância diferentes quando comparamos os controles aos afetados.
+É de interesse verificar-se-á entre as proteínas identificadas, quais tem abundância diferentes quando comparamos os controles aos pacientes afetados.
 
-Vamos começar lendo os dados:
+Começar-se-á pela leitura dos dados:
+
 ```{r dados, warning=FALSE}
-library(formattable)
 library(readxl)
 tabela=read_excel("20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx", skip=2)
 tbl=tabela
@@ -21,15 +21,15 @@ row.names(dados)=tabela[[1]]
 rm(tabela)
 ```
 
-Vamos trabalhar somente com os "Controles" e "Afetados". Para enxergar melhor o comportamento dos dados vamos aplicar uma transformação nos mesmos. Somaremos, nesse caso,  1 e aplicaremos o log em base 2 em todas as observações de controle e afetados.
+Analisou-se somente os "Controles" e "Afetados". E para enxergar-se melhor o comportamento dos dados, aplicou-se uma transformação aos mesmos. Somou-se 1 a todos os valores e calculou-se o log em base 2 do resultado dessa soma, para todos os casos. 
 
-Aplicando a transformação:
 ```{r transformacao}
 tran = function(x) log2(x+1)
 n.dados=apply(dados, 2, tran)
 ```
 
-Podemos plotar a densidade para cada indivíduo:
+Graficou-se a densidade para as transformações.
+
 ```{r dens.ind, results='hide', fig.align='center'}
 fit=apply(n.dados, 2, density)
 matx=sapply(fit, '[[', 'x')
@@ -37,7 +37,7 @@ maty=sapply(fit, '[[', 'y')
 matplot(matx,maty, type='l', lty=1)
 ```
 
-Como podemos ver existe uma variabilidade muito grande entre as densidades no ponto igual a 0. Se nos restringirmos as proteínas cuja contagem de peptídeo seja maior que 5 a tendência é que essa variabilidade diminua. Isso pode ser visto no gráfico abaixo.
+Observou-se uma grande variabilidade entre as densidades no ponto 0. Contudo ao serem restringidas as proteínas cuja contagem de peptídeo forem maior que 5, tal variabilidade foi reduzida. Como observou-se no gráfico abaixo.
 
 ```{r, fig.align='center', fig.cap="Densidade para proteínas com contagem de peptídeo igual ou superior a 5", eval=FALSE}
 tbl1=tbl[which('Unique peptides'>=5),]
@@ -47,8 +47,7 @@ maty=sapply(fit, '[[', 'y')
 matplot(matx,maty, type='l', lty=1)
 ```
 
-
-Podemos estudar as correlações entre cada réplica de cada indivíduo. Para mostrar tais correlações podemos fazer alguns gráficos.
+As correlações podem ser estudadas entre cada réplica de cada indivíduo. Para mostrar tais correlações elaborou-se alguns gráficos.
 
 ```{r, fig.cap="Gráfico de correlação entre as réplicas de cada indivíduo", fig.align='center'}
 library(corrplot)
@@ -57,7 +56,7 @@ x=cor(data[,1:10])
 corrplot(x, method="ellipse")
 ```
 
-Para garantir que as correlações sejam calculadas para cada individuo entre suas réplicas corretamente, precisamos no certificar de que existam para cada um duas réplicas.
+Garantiu-se que as correlações calculadas para cada individuo entre suas réplicas as foram feitas corretamente. O que se foi certificado ao se assegurar de que existam para cada indivíduo, seja ele controle ou paciente afetado, duas réplicas.
 
 ```{r}
 nms=colnames(dados)
@@ -67,9 +66,9 @@ replicas = sapply(strsplit(nms, "-"), '[', 2)
 #table(amostras, replicas)
 ```
 
-Como podemos ver, cada um dos indivíduos, seja ele controle ou afetado, temos duas réplicas, com exceção do paciente afetado 73B, portanto não faremos essa análise para ele.
+Observou-se que somente o paciente 73B não possuia duplicata, portanto não se analisou tal indivíduo.
 
-Então podemos calcular as correlações par a par e graficá-las.
+Então calcular-se-á corretamente as correlações par a par.
 
 ```{r cor.pares, fig.cap="Gráfico de dispersão", fig.align='center'}
 data=data[,-75]
@@ -80,8 +79,8 @@ for (i in 1:(length(data)/2)) {
 hist(x)
 ```
 
+Analizar-se-á as proteínas com o pacote de $Limma$.
 
-Analizar-se-a as proteínas com o pacote de $Limma$.
 ```{r limma}
 library("limma")
 status=c(rep(0,17),rep(1,21))
@@ -89,10 +88,10 @@ dm=model.matrix(~status, data=data)
 fit=lmFit(data, desing=dm)
 cfit=eBayes(fit)
 x=topTable(cfit, coef = 1) #?
-table(x)
 ```
 
-Calcularam-se as correlações entre as duplicatas de pacientes e controles.
+Calculou-se as correlações entre as duplicatas de pacientes e controles.
+
 ```{r cor}
 cor=duplicateCorrelation(data, ndups=2)
 ```
