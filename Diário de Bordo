@@ -3,4 +3,5 @@
 Dei início as análises com pacote 'limma'.
 Arrendondei os valores para 3 casas decimais.
 Calculei a correlação das duplicatas pelo pacote, utilizando a função 'duplicateCorrelation'. Foi necessário instalar a biblioteca 'statmod'.
-Defini a matriz de desenho e modelei
+Defini a matriz de desenho e modelei.
+Reescrevi texto do .html para terceira voz do singular passiva.
