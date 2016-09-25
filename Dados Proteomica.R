@@ -76,3 +76,19 @@ nms = gsub("--", "-", nms)
 amostras = sapply(strsplit(nms, "-"), '[', 1)
 replicas = sapply(strsplit(nms, "-"), '[', 2)
 table(amostras, replicas)
+
+##Limma
+
+#Criando indicadoras para controle e afetados
+status=c(rep(0,17),rep(1,21))
+dm=model.matrix(~status, data)
+fit=lmFit(dm)
+cfit=eBayes(fit)
+x=topTable(cfit, coef = 1)
+
+
+#correlação
+cor=duplicateCorrelation(data, ndups=2)
+cor2=as.data.frame(cor)
+#corrplot(cor2, method="ellipse") ???
+
