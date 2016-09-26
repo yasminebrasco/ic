@@ -7,7 +7,7 @@ output: html_document
 
 #Objetivo
 
-É de interesse verificar-se-á entre as proteínas identificadas, quais tem abundância diferentes quando comparamos os controles aos pacientes afetados.
+Verificar-se-á entre as proteínas identificadas, quais tem abundância diferentes quando comparamos os controles aos pacientes afetados.
 
 Começar-se-á pela leitura dos dados:
 
