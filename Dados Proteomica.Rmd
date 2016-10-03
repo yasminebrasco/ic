@@ -82,15 +82,22 @@ for (i in 1:(length(data)/2)) {
 hist(x)
 ```
 
+```{r}
+pd=data.frame(id=names(data),
+           status=ifelse (grepl("^C", names(data)), "controle", "caso"),
+           replica=ifelse (grepl("1$", names(data)), "1", "2"))
+```
+
+
 Analizar-se-á as proteínas com o pacote de $Limma$.
 
 ```{r limma}
 library("limma")
-status=c(rep(0,17),rep(1,21))
-dm=model.matrix(~status, data=data)
-fit=lmFit(data, desing=dm)
+status=model.matrix(~status+replica, data = pd)
+fit=lmFit(as.matrix(data), design=status)
 cfit=eBayes(fit)
-x=topTable(cfit, coef = 1) #?
+x=topTable(cfit, coef = 2)
+x
 ```
 
 Calculou-se as correlações entre as duplicatas de pacientes e controles.

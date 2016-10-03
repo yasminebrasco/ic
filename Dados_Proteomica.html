@@ -124,7 +124,7 @@ $(document).ready(function () {
 
 <div id="objetivo" class="section level1">
 <h1>Objetivo</h1>
-<p>É de interesse verificar-se-á entre as proteínas identificadas, quais tem abundância diferentes quando comparamos os controles aos pacientes afetados.</p>
+<p>Verificar-se-á entre as proteínas identificadas, quais tem abundância diferentes quando comparamos os controles aos pacientes afetados.</p>
 <p>Começar-se-á pela leitura dos dados:</p>
 <pre class="r"><code>library(readxl)
 tbl=read_excel(&quot;20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx&quot;, skip=2)
@@ -188,13 +188,38 @@ hist(x)</code></pre>
 Gráfico de dispersão
 </p>
 </div>
+<pre class="r"><code>pd=data.frame(id=names(data),
+           status=ifelse (grepl(&quot;^C&quot;, names(data)), &quot;controle&quot;, &quot;caso&quot;),
+           replica=ifelse (grepl(&quot;1$&quot;, names(data)), &quot;1&quot;, &quot;2&quot;))</code></pre>
 <p>Analizar-se-á as proteínas com o pacote de <span class="math inline">\(Limma\)</span>.</p>
 <pre class="r"><code>library(&quot;limma&quot;)
-status=c(rep(0,17),rep(1,21))
-dm=model.matrix(~status, data=data)
-fit=lmFit(data, desing=dm)
+status=model.matrix(~status+replica, data = pd)
+fit=lmFit(as.matrix(data), design=status)
 cfit=eBayes(fit)
-x=topTable(cfit, coef = 1) #?</code></pre>
+x=topTable(cfit, coef = 2)
+x</code></pre>
+<pre><code>##                              logFC   AveExpr          t      P.Value
+## P30414;A8K7K2;C9JMM5     -3.565765  8.326415 -11.261899 7.357341e-18
+## Q9NZR2;A0A087WUR9;H0Y7T7  2.044322 10.740499  10.621227 1.141014e-16
+## E9PBW4;P69891;P69892     -2.934441  9.377093 -10.092074 1.127915e-15
+## M0R0G9                    5.874886  3.659299   9.678291 6.861363e-15
+## Q9NUL7                   -9.288619  6.493743  -9.556715 1.168554e-14
+## P31150                    2.560670  8.233278   9.308224 3.477559e-14
+## REVERSE37060              6.235941  6.664957   9.170657 6.367566e-14
+## Q5T8A0                   -2.355840  9.862516  -9.166176 6.494338e-14
+## A6NHR9;J3KRK8             4.150655  2.161304   9.095402 8.867565e-14
+## C9JC24                    4.571201  3.470123   8.914417 1.967967e-13
+##                             adj.P.Val        B
+## P30414;A8K7K2;C9JMM5     4.086267e-14 30.06862
+## Q9NZR2;A0A087WUR9;H0Y7T7 3.168597e-13 27.43023
+## E9PBW4;P69891;P69892     2.088147e-12 25.22130
+## M0R0G9                   9.527002e-12 23.47832
+## Q9NUL7                   1.298029e-11 22.96401
+## P31150                   3.219060e-11 21.91020
+## REVERSE37060             4.508694e-11 21.32549
+## Q5T8A0                   4.508694e-11 21.30644
+## A6NHR9;J3KRK8            5.472273e-11 21.00530
+## C9JC24                   1.093009e-10 20.23443</code></pre>
 <p>Calculou-se as correlações entre as duplicatas de pacientes e controles.</p>
 <pre class="r"><code>cor=duplicateCorrelation(data, ndups=2)</code></pre>
 </div>
