@@ -36,6 +36,7 @@ fit=apply(n.dados, 2, density)
 matx=sapply(fit, '[[', 'x')
 maty=sapply(fit, '[[', 'y')
 matplot(matx,maty, type='l', lty=1)
+rm(fit)
 ```
 
 As correlações podem ser estudadas entre cada réplica de cada indivíduo. Para mostrar tais correlações elaborou-se alguns gráficos.
@@ -45,6 +46,7 @@ library(corrplot)
 data=as.data.frame(n.dados)
 x=cor(data[,1:10])
 corrplot(x, method="ellipse")
+rm(x)
 ```
 
 Garantiu-se que as correlações calculadas para cada individuo entre suas réplicas as foram feitas corretamente. O que se foi certificado ao se assegurar de que existam para cada indivíduo, seja ele controle ou paciente afetado, duas réplicas.
@@ -55,6 +57,7 @@ nms=gsub("--", "-", nms)
 amostras = sapply(strsplit(nms, "-"), '[', 1)
 replicas = sapply(strsplit(nms, "-"), '[', 2)
 #table(amostras, replicas)
+rm(nms, amostras, replicas)
 ```
 
 Observou-se que somente o paciente 73B não possuia duplicata, portanto não se analisou tal indivíduo.
@@ -68,6 +71,7 @@ for (i in 1:(length(data)/2)) {
   x[i]=cor(data[,2*i-1],data[,2*i])
 }
 hist(x)
+rm(i, x)
 ```
 
 ```{r}
@@ -81,12 +85,18 @@ Analizar-se-á as proteínas com o pacote de $Limma$.
 
 ```{r limma}
 library("limma")
+library("DT")
 status=model.matrix(~status+replica, data = pd)
 fit=lmFit(as.matrix(data), design=status)
 cfit=eBayes(fit)
-x=topTable(cfit, coef = 2, number = 10)
-x
+topP=topTable(cfit, coef = 2)
+datatable(topP)
 ```
 
+```{r grafico1}
+library(ggplot2)
+attach(topP)
+ggplot(topP, aes(x=AveExpr, y=logFC, colour=adj.P.Val, size=adj.P.Val )) + geom_point() + guides(fill=FALSE)
+```
 
 
