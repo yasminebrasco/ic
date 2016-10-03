@@ -5,3 +5,8 @@ Arrendondei os valores para 3 casas decimais.
 Calculei a correlação das duplicatas pelo pacote, utilizando a função 'duplicateCorrelation'. Foi necessário instalar a biblioteca 'statmod'.
 Defini a matriz de desenho e modelei.
 Reescrevi texto do .html para terceira voz do singular passiva.
+
+03/10/2016
+
+Atualizei a seleção dos dados, agora trabalharemos somente com as proteínas cuja contagem de "Unique Peptides" foi igual ou maior que 5.
+Montando a tabela com as proteínas testadas. Instalei pacote "DT" e farei um datatable das proteínas ranqueadas.

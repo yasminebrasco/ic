@@ -14,10 +14,12 @@ Começar-se-á pela leitura dos dados:
 ```{r dados, warning=FALSE}
 library(readxl)
 tbl=read_excel("20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx", skip=2)
-tabela=tbl[-c(5555:9643),-c(2:11)]
-dados=apply(tabela[,-1], 2, as.double)
-row.names(dados)=tabela[[1]]
-rm(tabela)
+tabela=tbl[,-c(2,4:11)]
+tab=tabela[which(tbl$`Unique peptides`>=5),]
+tab=tab[,-2]
+dados=apply(tab[,-1], 2, as.double)
+row.names(dados)=tab[[1]]
+rm(tab, tbl, tabela)
 ```
 
 Analisou-se somente os "Controles" e "Afetados". E para enxergar-se melhor o comportamento dos dados, aplicou-se uma transformação aos mesmos. Somou-se 1 a todos os valores e calculou-se o log em base 2 do resultado dessa soma, para todos os casos. 
@@ -34,20 +36,6 @@ fit=apply(n.dados, 2, density)
 matx=sapply(fit, '[[', 'x')
 maty=sapply(fit, '[[', 'y')
 matplot(matx,maty, type='l', lty=1)
-```
-
-Observou-se uma grande variabilidade entre as densidades no ponto 0. Contudo ao serem restringidas as proteínas cuja contagem de peptídeo forem maior que 5, tal variabilidade foi reduzida. Como observou-se no gráfico abaixo.
-
-```{r, fig.align='center', fig.cap="Densidade para proteínas com contagem de peptídeo igual ou superior a 5"}
-tabela=tbl[-c(5555:9643),-c(2,4:11)]
-tabela=apply(tabela[,-1], 2, as.double)
-tab=tabela[which(tbl$`Unique peptides`>=5),]
-tab=tab[,-1]
-tab=apply(tab, 2, tran)
-fit1=apply(tab, 2, density)
-matx1=sapply(fit1, '[[', 'x')
-maty1=sapply(fit1, '[[', 'y')
-matplot(matx1,maty1, type='l', lty=1)
 ```
 
 As correlações podem ser estudadas entre cada réplica de cada indivíduo. Para mostrar tais correlações elaborou-se alguns gráficos.
@@ -96,13 +84,9 @@ library("limma")
 status=model.matrix(~status+replica, data = pd)
 fit=lmFit(as.matrix(data), design=status)
 cfit=eBayes(fit)
-x=topTable(cfit, coef = 2)
+x=topTable(cfit, coef = 2, number = 10)
 x
 ```
 
-Calculou-se as correlações entre as duplicatas de pacientes e controles.
 
-```{r cor}
-cor=duplicateCorrelation(data, ndups=2)
-```
 
