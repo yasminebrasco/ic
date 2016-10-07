@@ -11,3 +11,8 @@ Reescrevi texto do .html para terceira voz do singular passiva.
 Atualizei a seleção dos dados, agora trabalharemos somente com as proteínas cuja contagem de "Unique Peptides" foi igual ou maior que 5.
 Montando a tabela com as proteínas testadas. Instalei pacote "DT" e farei um datatable das proteínas ranqueadas.
 Criação primeira versão do gráfico.
+
+06/10/2016
+
+Atualização dos genes testados e dos gráficos.
+Alteração nos critérios de pintura.

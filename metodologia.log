@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=latex 2016.6.15)  25 SEP 2016 22:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.6.15)  6 OCT 2016 23:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -258,16 +258,34 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
- [1
 
-] (./metodologia.aux) ) 
+Underfull \hbox (badness 10000) in paragraph at lines 11--13
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--15
+
+ []
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./metodologia.aux) ) 
 Here is how much of TeX's memory you used:
- 419 strings out of 494978
- 4345 string characters out of 6180209
- 50612 words of memory out of 5000000
- 3707 multiletter control sequences out of 15000+600000
- 3938 words of font info for 15 fonts, out of 8000000 for 9000
+ 426 strings out of 494977
+ 4408 string characters out of 6180183
+ 52615 words of memory out of 5000000
+ 3712 multiletter control sequences out of 15000+600000
+ 4285 words of font info for 16 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 23i,4n,19p,326b,107s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 23i,4n,19p,409b,107s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on metodologia.pdf (1 page, 27301 bytes).
+PDF statistics:
+ 16 PDF objects out of 1000 (max. 8388607)
+ 10 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-Output written on metodologia.dvi (1 page, 832 bytes).
