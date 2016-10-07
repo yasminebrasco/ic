@@ -89,14 +89,39 @@ library("DT")
 status=model.matrix(~status+replica, data = pd)
 fit=lmFit(as.matrix(data), design=status)
 cfit=eBayes(fit)
-topP=topTable(cfit, coef = 2)
+topP=topTable(cfit, coef = 2, number=Inf)
 datatable(topP)
 ```
 
-```{r grafico1}
+Gráfico 1
+
+```{r versao11}
 library(ggplot2)
-attach(topP)
-ggplot(topP, aes(x=AveExpr, y=logFC, colour=adj.P.Val, size=adj.P.Val )) + geom_point() + guides(fill=FALSE)
+ggplot(topP, aes(x=AveExpr, y=logFC, colour=adj.P.Val, size=adj.P.Val )) + geom_point()
 ```
 
+```{r versao12}
+value=ifelse(topP$adj.P.Val<3e-8, "red", "blue")
+plot(topP$AveExpr,topP$logFC, col=value, pch=19)
+
+#ggplot(topP, aes(x=AveExpr, y=logFC, colour=value, size=adj.P.Val )) + geom_point()
+
+#ggplot(topP, aes(x=AveExpr, y=logFC, colour=value, size=value)) + geom_point()
+
+ggplot(topP, aes(x=AveExpr, y=logFC, col=(topP$adj.P.Val<0.05))) + geom_point() + theme_bw()
+```
+
+```{r versao2}
+ggplot(topP, aes(x=AveExpr, y=logFC, col=(abs((topP$logFC)>2)&(topP$adj.P.Val<0.05)))) + geom_point() + theme(legend.position="none")
+```
+
+Gráfico 2
+
+```{r graf2}
+ggplot(topP, aes(x=logFC, y=(-10*log(adj.P.Val)), col=((abs(logFC)>1)&(adj.P.Val<0.05)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = 200) + ylab("-10*log(p-valor)") + theme(legend.position="none")
+```
+
+```{r}
+ggplot(topP, aes(x=logFC, y=(-(10*log(adj.P.Val))), col=(abs(topP$logFC>1)|((-10*log(topP$adj.P.Val))>200)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = 200)  + ylab("-10*log(p-valor)") + theme(legend.position="none")
+```
 
