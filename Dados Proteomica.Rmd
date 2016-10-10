@@ -118,10 +118,10 @@ ggplot(topP, aes(x=AveExpr, y=logFC, col=(abs((topP$logFC)>2)&(topP$adj.P.Val<0.
 Gráfico 2
 
 ```{r graf2}
-ggplot(topP, aes(x=logFC, y=(-10*log(adj.P.Val)), col=((abs(logFC)>1)&(adj.P.Val<0.05)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = 200) + ylab("-10*log(p-valor)") + theme(legend.position="none")
+ggplot(topP, aes(x=logFC, y=(-10*log(adj.P.Val)), col=(abs(topP$logFC>1)|((-10*log(topP$adj.P.Val))>-10*log(0.05)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = -10*log(adj.P.Val)) + ylab("-10*log(p-valor)") + theme(legend.position="none")
 ```
 
 ```{r}
-ggplot(topP, aes(x=logFC, y=(-(10*log(adj.P.Val))), col=(abs(topP$logFC>1)|((-10*log(topP$adj.P.Val))>200)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = 200)  + ylab("-10*log(p-valor)") + theme(legend.position="none")
+ggplot(topP, aes(x=logFC, y=(-(10*log(adj.P.Val))), col=(abs(topP$logFC>1)|((-10*log(topP$adj.P.Val))>-10*log(0.05)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = -10*log(0.05))  + ylab("-10*log(p-valor)") + theme(legend.position="none")
 ```
 
