@@ -125,3 +125,7 @@ ggplot(topP, aes(x=logFC, y=(-10*log(adj.P.Val)), col=(abs(topP$logFC>1)|((-10*l
 ggplot(topP, aes(x=logFC, y=(-(10*log(adj.P.Val))), col=(abs(topP$logFC>1)|((-10*log(topP$adj.P.Val))>-10*log(0.05)))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = -10*log(0.05))  + ylab("-10*log(p-valor)") + theme(legend.position="none")
 ```
 
+```{r eval=FALSE}
+volcanoplot(topP, coef=1, highlight=0,
+            xlab="Log Fold Change", ylab="-10*log(p-valor)") #names=fit$genes$ID usar isso? como vou usar?
+```
