@@ -10,10 +10,10 @@ dashboardPage(
   ,dashboardSidebar(
      sidebarMenu(
        menuItem("Introdução", tabName = "intro", icon = icon("book"))
-      ,menuItem("Análises Descritivas", tabName = "analises", icon = icon("tasks"))
-      #,menuSubItem("Gráficos", tabName = "grafs", icon = icon("bar-chart"))
+      ,menuItem("Análises Descritivas", tabName = "analises", icon = icon("bar-chart"))
+      ,menuSubItem("Testes", tabName = "test", icon = icon("tasks"))
       ,menuItem("Sobre", tabName = "about", icon = icon("gear"))
-      #,menuItem("Contato", tabName = "cont", icon = icon("envelope-o"))
+      ,menuItem("Contato", tabName = "cont", icon = icon("envelope-o"))
       ,id = "sidebar_1"
     )
   )
