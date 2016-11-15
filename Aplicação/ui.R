@@ -5,8 +5,11 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 
+#Início Dashboard ----
 dashboardPage(
    dashboardHeader(disable = FALSE)
+
+#Menu lateral ----
   ,dashboardSidebar(
      sidebarMenu(
        menuItem("Introdução", tabName = "intro", icon = icon("book"))
@@ -17,6 +20,8 @@ dashboardPage(
       ,id = "sidebar_1"
     )
   )
+
+#Início do corpo da aplicação ----
   ,dashboardBody(
     useShinyjs()
     ,tags$head( # turn the background of dashboardBody into some specific colour/image
@@ -30,6 +35,8 @@ dashboardPage(
     ,fluidPage(
       style="background-color: rgb(255,255,255)"
       ,tabItems(
+
+#Introdução ----
         tabItem(tabName="intro"
           ,fluidRow(
             style="background-color: rgb(0,146,172); color: white; text-align:center"
@@ -46,6 +53,8 @@ dashboardPage(
           ,actionButton("start", "Começar!", style="aling: center")
           ,hr()
         )
+
+#Analises Descritivas ----
         ,tabItem(tabName = "analises"
           ,fluidRow(
             style="background-color: rgb(0,146,172); color: white; text-align:center"
@@ -66,6 +75,10 @@ dashboardPage(
             ,tabPanel("Correlações", plotOutput("correlation"))
             ,width = 12
           )
+        )
+
+#Testes de Hipóteses ----
+        ,tabItem("test"
           ,fluidRow(
             box(width = 12
               ,solidHeader = TRUE
@@ -86,6 +99,8 @@ dashboardPage(
             )  
           )
         )
+
+#"Sobre" ----
         ,tabItem("about"
           ,fluidRow(
             style="background-color: rgb(0,146,172); color: white; text-align:center"
@@ -95,11 +110,16 @@ dashboardPage(
           ,br()
           ,p("Essa ferramenta utiliza métodos estatísticos para cada uma de suas análises. Foi utilizado o pacote 'limma' para modelar e realizar os testes apresentados.")
           ,p("Ela foi criada em 'R', software estatístico de livre acesso. Apap foi desenvolvida por Yasmine Abboudi Brasco, contudo sua realização não seria possível sem a contribuição de algumas pessoas. Agradecimentos a:")
-          ,p("André Blazko")
-          ,p("Benilton de Sá Carvalho")
-          ,p("Felipe Hipolito")
-          ,p("Monica Quast")
+          ,p("André Blazko;")
+          ,p("Benilton de Sá Carvalho;")
+          ,p("Felipe Hipolito;")
+          ,p("Monica Quast;")
+          ,p("Obrigada!")
           ,br()
+        )
+
+#Contato ----
+        ,tabItem("contact"
           ,p("Caso você tenha algum problema ou dúvida entre em contato através do endereço:")
           ,br()
           ,infoBox("E-mail", "yasminebrasco@gmail.com", icon=icon("envelope"), color = 'blue', width = 7)
