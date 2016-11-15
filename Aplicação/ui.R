@@ -10,7 +10,7 @@ dashboardPage(
   ,dashboardSidebar(
      sidebarMenu(
        menuItem("Introdução", tabName = "intro", icon = icon("book"))
-      ,menuItem("Análises", tabName = "analises", icon = icon("tasks"))
+      ,menuItem("Análises Descritivas", tabName = "analises", icon = icon("tasks"))
       #,menuSubItem("Gráficos", tabName = "grafs", icon = icon("bar-chart"))
       ,menuItem("Sobre", tabName = "about", icon = icon("gear"))
       #,menuItem("Contato", tabName = "cont", icon = icon("envelope-o"))
@@ -58,24 +58,13 @@ dashboardPage(
                       accept=c('text/csv', 'text/comma-separated-values,text/plain'))
           ,actionButton("load", "Carregar")
           ,sliderInput("slider", label=h3("Peptide Count"), min=0, max=100, value=c(0,100))
+          ,actionButton("check", "Confirmar", icon=icon("check"))
           )
           ,br()
-          ,fluidRow(
-             box(width =  12
-              ,solidHeader = TRUE
-              ,title = "Densidades"
-              ,footer = "Gráfico das densidades para cada uma das proteínas analisadas"
-              ,collapsible = TRUE
-              ,plotOutput("density")
-            )
-            ,box(
-               width = 12
-              ,solidHeader = TRUE
-              ,title = "Correlações"
-              ,footer = "Gráfico de correlações para cada uma das réplicas"
-              ,collapsible = TRUE
-              ,plotOutput("correlation")
-            )
+          ,tabBox(id="panel"
+            ,tabPanel("Densidades", plotOutput("density"))
+            ,tabPanel("Correlações", plotOutput("correlation"))
+            ,width = 12
           )
           ,fluidRow(
             box(width = 12

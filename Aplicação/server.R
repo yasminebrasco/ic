@@ -17,16 +17,25 @@ values=reactiveValues(
 shinyServer(
   function(input, output, session){
     #Quando usuário clicar em 'Começar' mudar para página Análises
-    observeEvent (input$start, {
+    shinyjs::useShinyjs()
+    shinyjs::hide("slider")
+    shinyjs::hide("panel")
+    shinyjs::hide("check")
+        observeEvent (input$start, {
       updateTabItems(session, "sidebar_1", "analises") #Levo o usuário da página de avisos para a página de análises
     })
+    observeEvent(input$load,{
+      delay(ms = 2000,expr = c(shinyjs::hide("datafile"),shinyjs::hide("load")))
+      delay(ms = 2000, expr = c(shinyjs::show("slider"),shinyjs::show("check")))
+    })
     suppressWarnings(
-      observeEvent(input$load,{
+      observeEvent(input$check,{
         if(is.null(input$datafile)) return(NULL)
         new = paste0(input$datafile$datapath, ".xlsx")
         file.rename(input$datafile$datapath, new)
         table <- loadData(input$datafile$datapath)
         values$filedata = table
+        shinyjs::show("panel")
       })
     )
     suppressWarnings(
