@@ -107,7 +107,7 @@ ggplot(topP, aes(x=AveExpr, y=logFC, col=(topP$adj.P.Val<0.05))) + geom_point() 
 ```
 
 ```{r versao2}
-ggplot(topP, aes(x=AveExpr, y=logFC, col=((abs(topP$logFC)>2)&(topP$adj.P.Val<0.05)))) + geom_point() + theme(legend.position="none")
+ggplot(topP, aes(x=AveExpr, y=logFC, col=((abs(topP$logFC)>1)&(topP$adj.P.Val<0.05)))) + geom_point() + theme(legend.position="none")
 ```
 
 Gráfico 2
