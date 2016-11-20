@@ -1,0 +1,121 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[portuguese]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=2cm]{geometry}
+\usepackage{setspace}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{indentfirst}
+
+
+\begin{document}
+\fontfamily{ptm}
+
+\begin{titlepage}
+\begin{center}
+\includegraphics[scale=0.3]{Logo_Unicamp.jpg}
+\textbf{
+	\begin{large}
+		\\Universidade Estadual de Campinas\\\vspace{7cm}
+	\end{large}
+	\begin{Large}
+		MODELOS ESTATÍSTICOS APLICADOS À BIOLOGIA COMPUTACIONAL E MEDICINA DE PRECISÃO\\\vspace{6cm}
+	\end{Large}
+	\begin{large}
+	Yasmine Brasco\\\vspace{5cm}
+	\end{large}
+}
+	\begin{small}
+		Campinas - SP\\
+		2016
+	\end{small}
+\end{center}
+\end{titlepage}
+
+
+\setstretch{1.5}
+\section{Resumo}
+
+
+\section{Introdução}
+
+Medicina de precisão 
+
+\section{Metodologia}
+
+Segundo Charnet, Freire, Charnet e Bonvino (1999, p. 11), seja uma variável resposta Y e uma variável preditora X:
+\begin{flushright}
+O modelo de regressão linear simples descreve a variável Y como uma soma de uma quantidade determinística e uma quantidade aleatória. A parte 			determinística, uma reta em função de X, representa a informação sobre Y que já poderíamos ``esperar'', apenas com o conhecimento da variável X.\\
+\end{flushright}
+
+Tal quantidade determinística não se define exclusivamente por uma medida quantitativa. Pode-se utilizar uma variável preditora com caráter indicador, ou seja, ela assume valor 1 quando se atende uma categoria de interesse e 0 caso contrário. Esse tipo de variável indicadora denomina-se \textit{Dummy}. 
+
+Utilizam-se modelos com as características apresentadas em diversas áreas de pesquisa, incluindo genética. Por exemplo, para se estudar proteínas com diferentes abundâncias entre pacientes, que sofrem de distúrbio bipolar, e indivíduos saudáveis. 
+
+Para esse estudo, dados foram coletados de cada indivíduo em duas réplicas. Dessa forma, torna-se interessante estudar a influência do grupo sobre a predição da abundância para cada proteína. Sendo assim, parâmetros foram estimados para cada uma das variáveis, baseados nos dados dos indivíduos de cada grupo. Logo, modelos foram ajustados para cada proteína do estudo.
+
+Uma medida qualitativa influência a predição de uma variável resposta se o parâmetro de sua respectiva preditora se faz indispensável ao modelo. Um teste de hipótese é aplicado para determinar se, de fato, a variável preditora para pacientes que sofrem de distúrbio bipolar e indivíduos saudáveis deve permanecer no modelo. Procedimento no qual se repete para todas as proteínas.
+
+Uma medida qualitativa a respeito da diferença da abundancia proteica se faz indispensável quando existe, de fato, diferença entre os grupos. Para validar tal suposição um teste de hipótese é aplicado para determinar se, de fato, a variável preditora de status do indivíduo (se sofre de distúrbio bipolar ou não) discrimina a variável resposta. Procedimento esse que se repete para todas as proteínas.
+
+
+Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. 
+
+\begin{table}
+\centering
+\begin{tabular}{l|r}
+Item & Quantity \\\hline
+Widgets & 42 \\
+Gadgets & 13
+\end{tabular}
+\caption{\label{tab:widgets}An example table.}
+\end{table}
+
+\subsection{Seleção de Modelos}
+
+\LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
+\[S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
+      = \frac{1}{n}\sum_{i}^{n} X_i\]
+denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
+
+
+\subsection{Aplicações}
+
+Use section and subsections to organize your document. Simply use the section and subsection buttons in the toolbar to create them, and we'll handle all the formatting and numbering automatically.
+
+\subsection{Modelo Final}
+
+You can make lists with automatic numbering \dots
+
+\begin{enumerate}
+\item Like this,
+\item and like this.
+\end{enumerate}
+\dots or bullet points \dots
+\begin{itemize}
+\item Like this,
+\item and like this.
+\end{itemize}
+
+\subsection{Conclusão}
+
+You can upload a file containing your BibTeX entries, created with JabRef; or import your, CiteULike or Zotero library as a file. You can then cite entries from it, like this. Just remember to specify a bibliography style, as well as the filename of the.
+
+You can find a \href{https://www.overleaf.com/help/97-how-to-include-a-bibliography-using-bibtex}{video tutorial here} to learn more about BibTeX.
+
+We hope you find Overleaf useful, and please let us know if you have any feedback using the help menu above --- or use the contact form at \url{https://www.overleaf.com/contact}!
+
+\bibliographystyle{alpha}
+\bibliography{Bibliografia}
+
+\selectfont
+\end{document}
