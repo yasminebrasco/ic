@@ -18,18 +18,24 @@ shinyServer(
   function(input, output, session){
     #Quando usuário clicar em 'Começar' mudar para página Análises
     shinyjs::useShinyjs()
-    shinyjs::hide("slider")
+    #shinyjs::hide("filtro")
     shinyjs::hide("panel")
     shinyjs::hide("check")
-        observeEvent (input$start, {
+    
+#Botão Start ----
+    observeEvent (input$start, {
       updateTabItems(session, "sidebar_1", "analises") #Levo o usuário da página de avisos para a página de análises
     })
-    observeEvent(input$load,{
-      delay(ms = 2000,expr = c(shinyjs::hide("datafile"),shinyjs::hide("load")))
-      delay(ms = 2000, expr = c(shinyjs::show("slider"),shinyjs::show("check")))
-    })
+    # observeEvent(input$load,{
+    #   delay(ms = 2000,expr = c(shinyjs::hide("datafile"),shinyjs::hide("load")))
+    #   delay(ms = 2000, expr = c(shinyjs::show("slider"),shinyjs::show("check")))
+    # })
+
+#Botão Load ----
     suppressWarnings(
-      observeEvent(input$check,{
+      observeEvent(input$load,{
+        delay(ms = 2000,expr = c(shinyjs::hide("datafile"),shinyjs::hide("load")))
+        delay(ms = 2000, expr = c(shinyjs::show("slider"),shinyjs::hide("filtro")))
         if(is.null(input$datafile)) return(NULL)
         new = paste0(input$datafile$datapath, ".xlsx")
         file.rename(input$datafile$datapath, new)
@@ -38,31 +44,30 @@ shinyServer(
         shinyjs::show("panel")
       })
     )
+
+#Gráfico de Densidade ----
     suppressWarnings(
       output$density <- renderPlot({
         if(is.null(values$filedata)) return(NULL)
         plotDensity(values$filedata)
       })
     )
+    
+
+#Gráfico de Correlações ----
     output$correlation <- renderPlot({
       if(is.null(values$filedata)) return(NULL)
-      data=values$filedata
-      x=cor(data[,1:10])
-      corrplot(x, method="ellipse")
+      plotCorr(values$filedata, 1, 10)
     })
-    # output$view <- renderDataTable({
-    #   if(is.null(values$filedata)) return(NULL)
-    #   data=as.data.frame(values$filedata)
-    #   data=data[,-75]
-    #   pd=data.frame(id=names(data),
-    #                 status=ifelse (grepl("^C", names(data)), "controle", "caso"),
-    #                 replica=ifelse (grepl("1$", names(data)), "1", "2"))
-    #   status=model.matrix(~status+replica, data = pd)
-    #   fit=lmFit(as.matrix(data), design=status)
-    #   cfit=eBayes(fit)
-    #   topP=topTable(cfit, coef = 2, number=Inf)
-    #   datatable(topP)
-    # })
+
+#Teste de Hipótese ----
+
+    output$view <- renderDataTable({
+      if(is.null(values$filedata)) return(NULL)
+      data=identRep(values$filedata)
+      testeHip(data)
+    })
+    
     # output$graf <- renderPlot({
     #   if(is.null(topP)) return(NULL)
     #   data=as.data.frame(values$filedata)

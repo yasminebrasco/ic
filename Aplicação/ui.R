@@ -1,5 +1,5 @@
 #Interface de usuário da minha aplicação!
-#Atualização: 30/10
+#Atualização: 27/11
 
 library(shiny)
 library(shinydashboard)
@@ -13,7 +13,7 @@ dashboardPage(
   ,dashboardSidebar(
      sidebarMenu(
        menuItem("Introdução", tabName = "intro", icon = icon("book"))
-      ,menuItem("Análises Descritivas", tabName = "analises", icon = icon("bar-chart"))
+      ,menuItem("Análises Gráficas", tabName = "analises", icon = icon("bar-chart"))
       ,menuSubItem("Testes", tabName = "test", icon = icon("tasks"))
       ,menuItem("Sobre", tabName = "about", icon = icon("gear"))
       ,menuItem("Contato", tabName = "cont", icon = icon("envelope-o"))
@@ -63,10 +63,14 @@ dashboardPage(
           )
           ,br()
           ,fluidRow(
-            fileInput('datafile', 'Encontrar Arquivo',
-                      accept=c('text/csv', 'text/comma-separated-values,text/plain'))
+            fileInput('datafile', 'Encontrar arquivo:',
+              accept=c('text/csv', 'text/comma-separated-values,text/plain'))
+          ,radioButtons("filtro", label = "Opções",
+            choices = list("Contagem total maior ou igual
+            que 5 e únicos iguais a 1" = 1, "Contagem de únicos maior ou igual que 2" = 2)
+            ,selected = 3)
           ,actionButton("load", "Carregar")
-          ,sliderInput("slider", label=h3("Peptide Count"), min=0, max=100, value=c(0,100))
+          #,sliderInput("slider", label=h3("Peptide Count"), min=0, max=100, value=c(0,100))
           ,actionButton("check", "Confirmar", icon=icon("check"))
           )
           ,br()
@@ -87,17 +91,11 @@ dashboardPage(
             )
           )
           ,fluidRow(
-            box(width = 12
-                ,solidHeader = TRUE
-                ,title = "Gráfico"
-                ,plotOutput("graf")
-            )
-            ,box(width = 12
-                ,solidHeader = TRUE
-                ,title = "Gráfico 'Vulcão'"
-                ,plotOutput("vulcano")
-            )  
-          )
+            tabBox(id="panel"
+                    ,tabPanel("Gráfico", plotOutput("graf"))
+                    ,tabPanel("Gráfico 'Vulcão'", plotOutput("vulcano"))
+                    ,width = 12
+          ))
         )
 
 #"Sobre" ----
