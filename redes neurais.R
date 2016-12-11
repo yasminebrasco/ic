@@ -1,3 +1,4 @@
+##Atualização 11/12
 
 library(readxl)
 tbl=read_excel("20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx", skip=2)
@@ -15,3 +16,42 @@ rm(names, nms, tbl)
 
 data=data.frame(t(dados))
 rm(dados)
+
+nms=rownames(data)
+data$amostras = sapply(strsplit(nms, "-"), '[', 1)
+library(plyr)
+data=ddply(data, .(amostras), function(mdf) {
+  idx=grep("amostras", names(mdf))
+  colMeans(mdf[,-idx])
+})
+rm(nms)
+
+#Grupo de afetados é 1, 0 se controle
+rownames(data)=data[[1]]
+id=substr(data$amostras, start = 1, stop = 1)!="C"
+id=as.numeric(id)
+data$amostras=id
+
+##Separando 20% do banco de dados para predição
+ind=sample(1:dim(data)[1], 0.2*dim(data)[1])
+pred=data[ind,]
+dados=data[-ind,]
+
+##Separando 20% do banco de dados para validação
+ind=sample(1:dim(dados)[1], 0.2*dim(dados)[1])
+valid=dados[ind,]
+train=dados[-ind,]
+rm(data, ind, id)
+
+#Transformando os dados em h2o
+library(h2o)
+h2o.init(nthreads = 2, max_mem_size = "2G")
+
+dados=as.h2o(dados)
+pred=as.h2o(pred)
+train=as.h2o(train)
+valid=as.h2o(valid)
+
+fit=h2o.deeplearning(x=dados[,-1], y=dados[,1], training_frame = train, validation_frame = valid
+  ,hidden = c(32,16))
+

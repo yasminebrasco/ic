@@ -3,11 +3,11 @@ library(readxl)
 #Função para carregar o arquivo
 #ENTRADA: arquivo em xlsx
 #SAÍDA: data frame dos dados
-loadData = function(filename){
+loadData = function(filename, uniqp, contp){
   tbl=read_excel(paste0(filename, ".xlsx"), skip = 2)
-  tabela=tbl[,-c(2,4:11)]
-  tab=tabela[which(tbl$`Unique peptides`>=5),]
-  tab=tab[,-2]
+  tabela=tbl[,-c(4:11)]
+  tab=tabela[which((uniqp[1]<tbl$`Unique peptides`<uniqp[2])&&(contp[1]<tbl$`Peptide count`<contp[2])),]
+  tab=tab[,-c(2,4)]
   dados=apply(tab[,-1], 2, as.double)
   #row.names(dados)=tab[[1]]
   dados=as.data.frame(dados)
@@ -63,6 +63,7 @@ testeHip = function(data){
   status=model.matrix(~status+replica, data = pd) #matriz de desenho  
   fit=lmFit(as.matrix(data), design=status)
   cfit=eBayes(fit)
-  topP=topTable(cfit, coef = 2, number=Inf)
-  return(datatable(topP))
+  topP=topTable(cfit, coef = 2, number=Inf) %>%
+    datatable() %>%
+    formatRound(columns=c('logFC', 'AveExpr', 't', 'P.Value', 'adj.P.Val', 'B'), digits=4)
 }

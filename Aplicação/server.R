@@ -32,18 +32,16 @@ shinyServer(
     # })
 
 #Botão Load ----
-    suppressWarnings(
-      observeEvent(input$load,{
-        delay(ms = 2000,expr = c(shinyjs::hide("datafile"),shinyjs::hide("load")))
-        delay(ms = 2000, expr = c(shinyjs::show("slider"),shinyjs::hide("filtro")))
-        if(is.null(input$datafile)) return(NULL)
-        new = paste0(input$datafile$datapath, ".xlsx")
-        file.rename(input$datafile$datapath, new)
-        table <- loadData(input$datafile$datapath)
-        values$filedata = table
-        shinyjs::show("panel")
-      })
-    )
+    observeEvent(input$load,{
+      delay(ms = 1000,expr = c(shinyjs::hide("datafile"),shinyjs::hide("load")))
+      delay(ms = 1000, expr = c(shinyjs::show("slider"),shinyjs::hide("filtro")))
+      if(is.null(input$datafile)) return(NULL)
+      new = paste0(input$datafile$datapath, ".xlsx")
+      file.rename(input$datafile$datapath, new)
+      table <- loadData(input$datafile$datapath, input$slider1, input$slider2)
+      values$filedata = table
+      shinyjs::show("panel")
+    })
 
 #Gráfico de Densidade ----
     suppressWarnings(
@@ -61,7 +59,6 @@ shinyServer(
     })
 
 #Teste de Hipótese ----
-
     output$view <- renderDataTable({
       if(is.null(values$filedata)) return(NULL)
       data=identRep(values$filedata)

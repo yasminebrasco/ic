@@ -65,12 +65,13 @@ dashboardPage(
           ,fluidRow(
             fileInput('datafile', 'Encontrar arquivo:',
               accept=c('text/csv', 'text/comma-separated-values,text/plain'))
-          ,radioButtons("filtro", label = "Opções",
-            choices = list("Contagem total maior ou igual
-            que 5 e únicos iguais a 1" = 1, "Contagem de únicos maior ou igual que 2" = 2)
-            ,selected = 3)
+          ,sliderInput("slider1", label = "Contagem Total de Peptídeos", min = 0, 
+            max = 100, value = c(0,100)
+          )
+          ,sliderInput("slider2", label = "Contagem de Peptídeos Únicos", min = 0, 
+            max = 100, value = c(0,100)
+          )
           ,actionButton("load", "Carregar")
-          #,sliderInput("slider", label=h3("Peptide Count"), min=0, max=100, value=c(0,100))
           ,actionButton("check", "Confirmar", icon=icon("check"))
           )
           ,br()
@@ -87,7 +88,7 @@ dashboardPage(
             box(width = 12
               ,solidHeader = TRUE
               ,title = "Proteínas Discrepantes"
-              ,tableOutput("view")
+              ,dataTableOutput("view")
             )
           )
           ,fluidRow(
