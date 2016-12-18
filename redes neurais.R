@@ -75,18 +75,19 @@ model_grid <- h2o.grid("deeplearning",
   y = "amostras",
   distribution = "multinomial",
   training_frame = data,
-  #validation_frame = test,
+  validation_frame = valid,
   score_interval = 2,
   epochs = 1000,
   stopping_rounds = 3,
   stopping_tolerance = 0.05,
   stopping_metric = "misclassification"
-  ,nfolds=5)
+  #,nfolds=5
+  )
 
 #Selecionando o melhor grid de acordo com o maior AUC
 grids=h2o.getGrid(grid_id = model_grid, sort_by = "auc", decreasing = T)
 
-bestmodel=h2o.getModel(grids@model_ids[[1]])
+bestmodel=h2o.getModel(model_grid@model_ids[[1]])
 
 #AUC do modelo
 h2o.auc(bestmodel)
