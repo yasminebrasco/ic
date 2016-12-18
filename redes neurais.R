@@ -52,7 +52,7 @@ h2o.init(nthreads = 2, max_mem_size = "2G")
 
 #pred=as.h2o(pred)
 #train=as.h2o(train)
-#valid=as.h2o(valid)
+valid=as.h2o(valid)
 data=as.h2o(data)
 
 table(dados[[1]])
@@ -80,7 +80,19 @@ model_grid <- h2o.grid("deeplearning",
   epochs = 1000,
   stopping_rounds = 3,
   stopping_tolerance = 0.05,
-  stopping_metric = "misclassification")
+  stopping_metric = "misclassification"
+  ,nfolds=5)
+
+#Selecionando o melhor grid de acordo com o maior AUC
+grids=h2o.getGrid(grid_id = model_grid, sort_by = "auc", decreasing = T)
+
+bestmodel=h2o.getModel(grids@model_ids[[1]])
+
+#AUC do modelo
+h2o.auc(bestmodel)
+
+#Testando a performance do modelo com os dados novos
+perf=h2o.performance(model = bestmodel, newdata = valid)
 
 fit=h2o.deeplearning(x=names(data)[-1], y="amostras", training_frame = data, nfolds = 5
-  ,hidden = model_grid)
+  ,grid_id = model_grid)
