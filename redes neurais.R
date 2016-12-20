@@ -67,6 +67,8 @@ search_criteria = list(strategy = "RandomDiscrete",
   max_models = 10, max_runtime_secs = 100,
   seed=123456)
 
+#####################################################################################
+##Modelo com banco de dados de treinamento e validação
 model_grid <- h2o.grid("deeplearning",
   grid_id = "mygrid",
   hyper_params = hyper_params, 
@@ -81,19 +83,55 @@ model_grid <- h2o.grid("deeplearning",
   stopping_rounds = 3,
   stopping_tolerance = 0.05,
   stopping_metric = "misclassification"
-  #,nfolds=5
   )
 
+#Elencando os grids de acordo com o maior AUC
+grid_models=lapply(model_grid@model_ids, function(mid){
+  model=h2o.getModel(mid, sort_by = "auc", decreasing = T)
+})
+
 #Selecionando o melhor grid de acordo com o maior AUC
-grids=h2o.getGrid(grid_id = model_grid, sort_by = "auc", decreasing = T)
+#grids=h2o.getGrid(grid_id = model_grid, sort_by = "auc", decreasing = T)
 
 bestmodel=h2o.getModel(model_grid@model_ids[[1]])
 
 #AUC do modelo
 h2o.auc(bestmodel)
 
+###################################################################################
+
+##Modelo com cross validation
+model_gridcv <- h2o.grid("deeplearning"
+  ,grid_id = "mygrid"
+  ,hyper_params = hyper_params
+  ,search_criteria = search_criteria
+  ,x = names(data)[-1]
+  ,y = "amostras"
+  ,distribution = "multinomial"
+  ,training_frame = data
+  ,score_interval = 2
+  ,epochs = 1000
+  ,stopping_rounds = 3
+  ,stopping_tolerance = 0.05
+  ,stopping_metric = "misclassification"
+  ,nfolds=5
+)
+
+#Elencando os grids de acordo com o maior AUC
+grid_models2=lapply(model_gridcv@model_ids, function(mid){
+  model=h2o.getModel(mid, sort_by = "auc", decreasing = T)
+})
+
+#Selecionando o melhor grid de acordo com o maior AUC
+#grids2=h2o.getGrid(grid_id = model_gridcv, sort_by = "auc", decreasing = T)
+
+bestmodel2=h2o.getModel(model_gridcv@model_ids[[1]])
+
+#AUC do modelo
+h2o.auc(bestmodel2)
+
 #Testando a performance do modelo com os dados novos
 perf=h2o.performance(model = bestmodel, newdata = valid)
 
 fit=h2o.deeplearning(x=names(data)[-1], y="amostras", training_frame = data, nfolds = 5
-  ,grid_id = model_grid)
+  ,grid_id = model_gridcv)
