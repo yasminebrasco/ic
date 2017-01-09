@@ -1,4 +1,5 @@
-##Atualização 11/12
+##Atualização
+source("Documentos/Github/ic/Redes Neurais/helpers.R")
 
 library(readxl)
 tbl=read_excel("20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx", skip=2)
@@ -7,6 +8,25 @@ dados=apply(tbl[,-1], 2, as.double)
 nms=colnames(dados)
 nms=gsub("--", "-", nms)
 colnames(dados)=nms
+
+
+
+### Para Unique peptides maior que e dps maior do que 5
+tbl_10=tbl[which(tbl$`Unique peptides`>=10),]
+tbl_5=tbl[which(tbl$`Unique peptides`>=5),]
+
+## Para unique peptides maiores que 10
+tbl_10=tbl_10[,-c(2:11)]
+dados_10=apply(tbl_10[,-1], 2, as.double)
+nms=colnames(dados_10)
+nms=gsub("--", "-", nms)
+colnames(dados_10)=nms
+
+names=tbl_10[[1]]
+names = sapply(strsplit(names, ";"), '[', 1)
+names=gsub("--", "-", names)
+rownames(dados_10)=names
+rm(names, nms, tbl)
 
 names=tbl[[1]]
 names = sapply(strsplit(names, ";"), '[', 1)
@@ -55,7 +75,6 @@ h2o.init(nthreads = 2, max_mem_size = "2G")
 valid=as.h2o(valid)
 data=as.h2o(data)
 
-table(dados[[1]])
 
 hidden_opt = lapply(1:100, function(x)10+sample(50,
   sample(10), replace=TRUE))
@@ -69,25 +88,12 @@ search_criteria = list(strategy = "RandomDiscrete",
 
 #####################################################################################
 ##Modelo com banco de dados de treinamento e validação
-model_grid <- h2o.grid("deeplearning",
-  grid_id = "mygrid",
-  hyper_params = hyper_params, 
-  search_criteria = search_criteria,
-  x = names(data)[-1],
-  y = "amostras",
-  distribution = "multinomial",
-  training_frame = data,
-  validation_frame = valid,
-  score_interval = 2,
-  epochs = 1000,
-  stopping_rounds = 3,
-  stopping_tolerance = 0.05,
-  stopping_metric = "misclassification"
-  )
+model_grid=redeNeural("mygrid", hyper_params, search_criteria, data, valid)
+
 
 #Elencando os grids de acordo com o maior AUC
 grid_models=lapply(model_grid@model_ids, function(mid){
-  model=h2o.getModel(mid, sort_by = "auc", decreasing = T)
+  model=h2o.getModel(mid)
 })
 
 #Selecionando o melhor grid de acordo com o maior AUC
@@ -97,9 +103,9 @@ bestmodel=h2o.getModel(model_grid@model_ids[[1]])
 
 #AUC do modelo
 h2o.auc(bestmodel)
+#[1] 1
 
 ###################################################################################
-
 ##Modelo com cross validation
 model_gridcv <- h2o.grid("deeplearning"
   ,grid_id = "mygrid"
@@ -107,7 +113,7 @@ model_gridcv <- h2o.grid("deeplearning"
   ,search_criteria = search_criteria
   ,x = names(data)[-1]
   ,y = "amostras"
-  ,distribution = "multinomial"
+  ,distribution = "bernoulli"
   ,training_frame = data
   ,score_interval = 2
   ,epochs = 1000
@@ -119,7 +125,7 @@ model_gridcv <- h2o.grid("deeplearning"
 
 #Elencando os grids de acordo com o maior AUC
 grid_models2=lapply(model_gridcv@model_ids, function(mid){
-  model=h2o.getModel(mid, sort_by = "auc", decreasing = T)
+  model=h2o.getModel(mid)
 })
 
 #Selecionando o melhor grid de acordo com o maior AUC
@@ -132,6 +138,3 @@ h2o.auc(bestmodel2)
 
 #Testando a performance do modelo com os dados novos
 perf=h2o.performance(model = bestmodel, newdata = valid)
-
-fit=h2o.deeplearning(x=names(data)[-1], y="amostras", training_frame = data, nfolds = 5
-  ,grid_id = model_gridcv)
