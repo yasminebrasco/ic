@@ -10,7 +10,7 @@ readData=function(filename, uniqp){
 }
 
 ###Função pra rede neural com banco de dados de validação e treinamento
-redeNeural=function(grid_id, hyper_params, search_criteria, train, valid){
+redeNeural=function(grid_id, hyper_params, search_criteria, train, valid, data){
   h2o.grid("deeplearning",
      grid_id
     ,hyper_params = hyper_params
@@ -37,7 +37,6 @@ redeNeuralV=function(grid_id, hyper_params, search_criteria, data, nfolds){
     ,x = names(data)[-1]
     ,y = "amostras"
     ,distribution = "bernoulli"
-    ,training_frame = data
     ,score_interval = 2
     ,epochs = 1000
     ,stopping_rounds = 3

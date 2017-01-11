@@ -1,5 +1,5 @@
 ##Atualização
-source("Documentos/Github/ic/Redes Neurais/helpers.R")
+source('~/Documentos/Github/ic/Redes Neurais/helpers.R')
 
 ### Para Unique peptides maior que e dps maior do que 5
 tbl_5=readData(filename = "20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx", 5)
@@ -88,7 +88,7 @@ search_criteria = list(strategy = "RandomDiscrete",
 
 #########################################################################################################################
 ##Modelo com bando de dados de treinamento e validação para uniqp >= 5
-model_grid5=redeNeural("mygrid5", hyper_params, search_criteria, train_5, valid_5)
+model_grid5=redeNeural("mygrid5", hyper_params, search_criteria, train_5, valid_5, tbl_5)
 
 
 #Elencando os grids de acordo com o maior AUC
@@ -100,7 +100,7 @@ grid_models5=lapply(model_grid5@model_ids, function(mid){
 
 
 ##Modelo com banco de dados de treinamento e validação
-model_grid10=redeNeural("mygrid10", hyper_params, search_criteria, train_10, valid_10)
+model_grid10=redeNeural("mygrid10", hyper_params, search_criteria, train_10, valid_10, tbl_10)
 
 
 #Elencando os grids de acordo com o maior AUC
@@ -122,10 +122,10 @@ h2o.auc(bestmodel10)
 
 ############################################################################################################################
 ##Modelo com cross validation uniqp >= 5
-model_gridcv5=redeNeuralV("mygrid5", hyper_params, search_criteria, tbl_5, nfolds = 5)
+model_gridcv5=redeNeuralV("mygridcv5", hyper_params, search_criteria, data=tbl_5, nfolds = 5)
 
 ##Modelo com cross validation uniqp >= 10
-model_gridcv10=redeNeuralV("mygrid10", hyper_params, search_criteria, tbl_10, nfolds = 5)
+model_gridcv10=redeNeuralV("mygridcv10", hyper_params, search_criteria, data=tbl_10, nfolds = 5)
 
 #Elencando os grids de acordo com o maior AUC
 grid_cv5=lapply(model_gridcv5@model_ids, function(mid){
