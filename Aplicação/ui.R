@@ -1,5 +1,5 @@
-#Interface de usuário da minha aplicação!
-#Atualização: 27/11
+#Interface de usuário da aplicação!
+#Atualização: 22/01/2017
 
 library(shiny)
 library(shinydashboard)
@@ -45,9 +45,9 @@ dashboardPage(
             )
           ,br()
           ,p("Caro usuário, bem vindo ao APAP! Espero que através dele você consiga realizar suas análises de maneira fácil e rápida! Para que seus dados sejam analisados você deve se certificar que:")
-          ,p("- O arquivo esteja em formato CSV separado por vírgulas e aspas duplas;")
-          ,p("- Caso ele tenha cabeçalho, ele deve ser a primeira linha do arquivo;")
-          ,p("- Caso ele não tenha cabeçalho, sua primeira linha não esteja em branco;")
+          ,p("- O arquivo esteja em formato XLSX;")
+          ,p("- Caso ele tenha cabeçalho, ele deve ser a segunda linha do arquivo;")
+          ,p("- Caso ele não tenha cabeçalho, sua duas primeiras linhas não estejam em branco;")
           ,p("- O arquivo não exceda 30MB.")
           ,br()
           ,actionButton("start", "Começar!", style="aling: center")
@@ -65,13 +65,9 @@ dashboardPage(
           ,fluidRow(
             fileInput('datafile', 'Encontrar arquivo:',
               accept=c('text/csv', 'text/comma-separated-values,text/plain'))
-          ,sliderInput("slider1", label = "Contagem Total de Peptídeos", min = 0, 
-            max = 100, value = c(0,100)
-          )
-          ,sliderInput("slider2", label = "Contagem de Peptídeos Únicos", min = 0, 
-            max = 100, value = c(0,100)
-          )
           ,actionButton("load", "Carregar")
+          ,uiOutput("slider1")
+          ,uiOutput("slider2")
           ,actionButton("check", "Confirmar", icon=icon("check"))
           )
           ,br()

@@ -3,15 +3,22 @@ library(readxl)
 #Função para carregar o arquivo
 #ENTRADA: arquivo em xlsx
 #SAÍDA: data frame dos dados
-loadData = function(filename, uniqp, contp){
+loadData = function(filename){
   tbl=read_excel(paste0(filename, ".xlsx"), skip = 2)
-  tabela=tbl[,-c(4:11)]
-  tab=tabela[which((uniqp[1]<tbl$`Unique peptides`<uniqp[2])&&(contp[1]<tbl$`Peptide count`<contp[2])),]
-  tab=tab[,-c(2,4)]
+  tab=tbl[,-c(4:11)]
   dados=apply(tab[,-1], 2, as.double)
-  #row.names(dados)=tab[[1]]
   dados=as.data.frame(dados)
+  colnames(dados) = gsub("--", "-", colnames(dados))
   return(dados)
+}
+
+#Função para definir o filtro dos dados
+#ENTRADA: número de peptídeos únicos e a contagem de peptídeos
+#SAÍDA: dados filtrados
+filtro = function(dados, uniqp, contp){
+  ndados = dados[which((dados$`Unique peptides`>=uniqp[1])&(dados$`Unique peptides`<=uniqp[2])
+                       &(dados$`Peptide count`>=contp[1])&(dados$`Peptide count`<=contp[2])),]
+  ndados=ndados[,-c(1,2)]
 }
 
 #Função para transformação da abundância
@@ -43,7 +50,6 @@ plotCorr = function (data, f, l){
 #SAÍDA: Um data frame sem indivíduos que não possuem réplicas
 identRep = function(data){
   nms=colnames(data)
-  nms=gsub("--", "-", nms)
   replicas = sapply(strsplit(nms, "-"), '[', 2) #Separando as replicas
   out=NULL
   for (i in 1:length(nms)) {
