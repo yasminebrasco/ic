@@ -56,11 +56,12 @@ shinyServer(
 #Botão Check ----
     suppressWarnings(
       observeEvent(input$check,{
-        values$filedata=filtro(values$filedata, input$slider1, input$slider2)
-        delay(ms = 1000,
-          expr = c(shinyjs::hide("slider1"),shinyjs::hide("slider2")
-                   ,shinyjs::show("panel"),shinyjs::hide("check"))
-        )
+        n.dados=filtro(values$filedata, input$slider1, input$slider2)
+        values$filedata=n.dados %>% na.omit()
+        shinyjs::hide("slider1")
+        shinyjs::hide("slider2")
+        shinyjs::show("panel")
+        shinyjs::hide("check")
       
 ##Gráfico de Densidade ----
         output$density <- renderPlot({
@@ -80,33 +81,32 @@ shinyServer(
           data=identRep(values$filedata)
           testeHip(data)
         })
+        
+        output$graf <- renderPlot({
+          if(is.null(topP)) return(NULL)
+          data=as.data.frame(values$filedata)
+          pd=data.frame(id=names(data),
+                        status=ifelse (grepl("^C", names(data)), "controle", "caso"),
+                        replica=ifelse (grepl("1$", names(data)), "1", "2"))
+          status=model.matrix(~status+replica, data = pd)
+          fit=lmFit(as.matrix(data), design=status)
+          cfit=eBayes(fit)
+          topP=topTable(cfit, coef = 2, number=Inf)
+          ggplot(topP, aes(x=AveExpr, y=logFC, col=((abs(topP$logFC)>1)&(topP$adj.P.Val<0.05)))) + geom_point() + theme(legend.position="none")
+        })
+        output$vulcano <- renderPlot({
+          if(is.null(topP)) return(NULL)
+          data=as.data.frame(values$filedata)
+          data=identRep(data)
+          pd=data.frame(id=names(data),
+                        status=ifelse (grepl("^C", names(data)), "controle", "caso"),
+                        replica=ifelse (grepl("1$", names(data)), "1", "2"))
+          status=model.matrix(~status+replica, data = pd)
+          fit=lmFit(as.matrix(data), design=status)
+          cfit=eBayes(fit)
+          topP=topTable(cfit, coef = 2, number=Inf)
+          ggplot(topP, aes(x=logFC, y=(-(10*log(adj.P.Val))), col=((abs(topP$logFC)>1)&((-10*log(topP$adj.P.Val))>-10*log(0.05))))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = -10*log(0.05))  + ylab("-10*log(p-valor)") + theme(legend.position="none")
+        })
       })
     )
-      
-      output$graf <- renderPlot({
-        if(is.null(topP)) return(NULL)
-        data=as.data.frame(values$filedata)
-        data=data[,-75]
-        pd=data.frame(id=names(data),
-                      status=ifelse (grepl("^C", names(data)), "controle", "caso"),
-                      replica=ifelse (grepl("1$", names(data)), "1", "2"))
-        status=model.matrix(~status+replica, data = pd)
-        fit=lmFit(as.matrix(data), design=status)
-        cfit=eBayes(fit)
-        topP=topTable(cfit, coef = 2, number=Inf)
-        ggplot(topP, aes(x=AveExpr, y=logFC, col=((abs(topP$logFC)>1)&(topP$adj.P.Val<0.05)))) + geom_point() + theme(legend.position="none")
-      })
-      output$vulcano <- renderPlot({
-        if(is.null(topP)) return(NULL)
-        data=as.data.frame(values$filedata)
-        data=data[,-75]
-        pd=data.frame(id=names(data),
-                      status=ifelse (grepl("^C", names(data)), "controle", "caso"),
-                      replica=ifelse (grepl("1$", names(data)), "1", "2"))
-        status=model.matrix(~status+replica, data = pd)
-        fit=lmFit(as.matrix(data), design=status)
-        cfit=eBayes(fit)
-        topP=topTable(cfit, coef = 2, number=Inf)
-        ggplot(topP, aes(x=logFC, y=(-(10*log(adj.P.Val))), col=((abs(topP$logFC)>1)&((-10*log(topP$adj.P.Val))>-10*log(0.05))))) + geom_point() + geom_vline(xintercept = c(-1,1)) + geom_hline(yintercept = -10*log(0.05))  + ylab("-10*log(p-valor)") + theme(legend.position="none")
-      })
 })
