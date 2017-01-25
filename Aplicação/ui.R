@@ -15,8 +15,8 @@ dashboardPage(
        menuItem("Introdução", tabName = "intro", icon = icon("book"))
       ,menuItem("Análises Gráficas", tabName = "analises", icon = icon("bar-chart"))
       ,menuSubItem("Testes", tabName = "test", icon = icon("tasks"))
+      ,menuItem("Contato", tabName = "contact", icon = icon("envelope-o"))
       ,menuItem("Sobre", tabName = "about", icon = icon("gear"))
-      ,menuItem("Contato", tabName = "cont", icon = icon("envelope-o"))
       ,id = "sidebar_1"
     )
   )
@@ -58,7 +58,7 @@ dashboardPage(
         ,tabItem(tabName = "analises"
           ,fluidRow(
             style="background-color: rgb(0,146,172); color: white; text-align:center"
-            ,h3("Análises")
+            ,h3("Análises Gráficas")
             #,br()
           )
           ,br()
@@ -71,7 +71,7 @@ dashboardPage(
           ,actionButton("check", "Confirmar", icon=icon("check"))
           )
           ,br()
-          ,tabBox(id="panel"
+          ,tabBox(id="panel1"
             ,tabPanel("Densidades", plotOutput("density"))
             ,tabPanel("Correlações", plotOutput("correlation"))
             ,width = 12
@@ -88,11 +88,12 @@ dashboardPage(
             )
           )
           ,fluidRow(
-            tabBox(id="panel"
+            tabBox(id="panel2"
                     ,tabPanel("Gráfico", plotOutput("graf"))
                     ,tabPanel("Gráfico 'Vulcão'", plotOutput("vulcano"))
                     ,width = 12
           ))
+          ,actionButton("again", "Realizar nova análise", style="aling:right")
         )
 
 #"Sobre" ----
@@ -103,8 +104,8 @@ dashboardPage(
             #,br()
           )
           ,br()
-          ,p("Essa ferramenta utiliza métodos estatísticos para cada uma de suas análises. Foi utilizado o pacote 'limma' para modelar e realizar os testes apresentados.")
-          ,p("Ela foi criada em 'R', software estatístico de livre acesso. Apap foi desenvolvida por Yasmine Abboudi Brasco, contudo sua realização não seria possível sem a contribuição de algumas pessoas. Agradecimentos a:")
+          ,p("Esta ferramenta utiliza métodos estatísticos para cada uma de suas análises. Foi utilizado o pacote 'limma' para modelar e realizar os testes apresentados.")
+          ,p("Ela foi desenvolvidade e criada em 'R', software estatístico de livre acesso, por Yasmine Abboudi Brasco. Contudo sua realização não seria possível sem a contribuição de algumas pessoas. Agradecimentos a:")
           ,p("André Blazko;")
           ,p("Benilton de Sá Carvalho;")
           ,p("Felipe Hipolito;")
@@ -115,7 +116,7 @@ dashboardPage(
 
 #Contato ----
         ,tabItem("contact"
-          ,p("Caso você tenha algum problema ou dúvida entre em contato através do endereço:")
+          ,p("Caso você tenha algum problema ou dúvida entre em contato através do e-mail:")
           ,br()
           ,infoBox("E-mail", "yasminebrasco@gmail.com", icon=icon("envelope"), color = 'blue', width = 7)
         )

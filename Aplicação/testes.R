@@ -1,3 +1,12 @@
+x=loadData("20160718_BPDunifesp_proteinsmeasurements_nofilter.xlsx")
+uniqp=c(1:1209)
+contp=c(0:374)
+y=filtro(x, uniqp, contp)
+
+
+
+
+
 setwd("~/Documentos/Estatística/2S2016/Curso R/teste/data")
 filedata = data.frame()
 save(filedata, file="filedata.RData")
